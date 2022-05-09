@@ -36,6 +36,66 @@ int main()
         return -1;
     }
 
+    //PROPRIEDADES DA LUZ PONTUAL
+    // propriedades da luz pontual
+    vec3 light_position_world = vec3 (0.0, 0.0, 2.0);
+    vec3 Ls = vec3 (1.0, 1.0, 1.0); // cor especular branca
+    vec3 Ld = vec3 (0.7, 0.7, 0.7); // cor difusa acinzentado
+    vec3 La = vec3 (0.2, 0.2, 0.2); // cor ambiente cinza
+    
+    // propriedades da superfície do objeto
+    vec3 Ks = vec3 (1.0, 1.0, 1.0); // reflete totalmente a luz especular
+    vec3 Kd = vec3 (1.0, 0.5, 0.0); // reflexão difusa alaranjada
+    vec3 Ka = vec3 (1.0, 1.0, 1.0); // reflete totalmente a luz ambiente
+    float q = 100.0; // potência especular
+    
+    glBindVertexArray(VAO);
+    // Position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    // Normal attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 *
+    sizeof(GLfloat)));// considering that vertex and normal are stored in the same array
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+    
+    // propriedades da luz pontual
+vec3 light_position_world = vec3 (0.0, 0.0, 2.0);
+vec3 Ls = vec3 (1.0, 1.0, 1.0); // cor especular branca
+vec3 Ld = vec3 (0.7, 0.7, 0.7); // cor difusa acinzentado
+vec3 La = vec3 (0.2, 0.2, 0.2); // cor ambiente cinza
+// propriedades da superfície do objeto
+vec3 Ks = vec3 (1.0, 1.0, 1.0); // reflete totalmente a luz especular
+vec3 Kd = vec3 (1.0, 0.5, 0.0); // reflexão difusa alaranjada
+vec3 Ka = vec3 (1.0, 1.0, 1.0); // reflete totalmente a luz ambiente
+float specular_exponent = 100.0; // potência especular
+    //AQUI COLOQUEI CODIGOS DO FRAGMENT SHADER QUE ESTAVAM NOS SLIDES
+    void main() {
+//intensidade ambiente
+vec3 Ia = La * Ka;
+//intensidade difusa
+vec3 Id = vec3 (0.0, 0.0, 0.0); //substituir depois
+//intensidade especular
+vec3 Is = vec3 (0.0, 0.0, 0.0); //substituir depois
+//cor final
+fragment_colour = vec4 (Is + Id + Ia, 1.0);
+}
+    
+    // intensidade difusa
+// passar coordenadas de mundo para coordenadas da view
+vec3 light_position = vec3 (view_mat * vec4 (light_position_world, 1.0));
+// direcao normalizada entre a superfície e a luz
+vec3 distance_to_light = light_position - position_eye;
+vec3 direction_to_light = normalize (distance_to_light);
+// multiplica vetor normal pelo vetor da luz
+float dot_prod = dot (direction_to_light, normal_eye);
+dot_prod = max (dot_prod, 0.0); //evita valores negativos
+vec3 Id = Ld * Kd * dot_prod; // intensidade difusa final
+    
+    
+    
+    
+    
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
@@ -118,7 +178,6 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -191,6 +250,7 @@ int main()
     return 0;
 }
 
+//MOVIMENTACAO WASD
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window)
@@ -217,6 +277,17 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
+int l, c, n, ks;
+
+for (l=0, l<4, l++){
+    
+    for (c=0, c<6, c++){
+        glUniformMatrix4fv(viewLoc, 1, FALSE, glm::value_ptr(view)); //zerando a matrix model?
+        glm::mat4 model = glm::mat4(1); //matriz identidade;
+        glDrawArrays(GL_POINTS, 0, n);    
+        //fazer uma logica aqui para que seja desenhado uma esfera do lado da outra e tambem abaixo - 3 esferas por 5 esferas = 15 esferas
+    }
+}
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
