@@ -92,10 +92,6 @@ float dot_prod = dot (direction_to_light, normal_eye);
 dot_prod = max (dot_prod, 0.0); //evita valores negativos
 vec3 Id = Ld * Kd * dot_prod; // intensidade difusa final
     
-    
-    
-    
-    
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
@@ -282,15 +278,15 @@ yi=0;
 //defini abaixo o 2 como xoffset
 yoffset= yi + 2 + l*
 for (l=0, l<4, l++){
-    
     for (c=0, c<6, c++){
         glUniformMatrix4fv(viewLoc, 1, FALSE, glm::value_ptr(view)); //zerando a matrix model?
         yoffset = yi + 2 + l*3;
         xoffset = xi + 3 + c*1.5;
         glDrawArrays(GL_POINTS, 0, xi + xoffset*L);
         glDrawArrays(GL_POINTS, 0, yi + yoffset*L);
-        glm::mat4 model = glm::mat4(1); //matriz identidade;
-        glDrawArrays(GL_POINTS, 0, n);    
+        glm::mat4 model = glm::mat4(1); //matriz identidade;  - aqui zera
+        model=glm::translate(xi+xoffset*c, yi+yoffset*l,0.0);
+        glDrawArrays(GL_POINTS, 0, n);
         //fazer uma logica aqui para que seja desenhado uma esfera do lado da outra e tambem abaixo - 3 esferas por 5 esferas = 15 esferas
     }
 }
@@ -307,7 +303,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
         lastY = ypos;
         firstMouse = false;
     }
-
+    
     float xoffset = xpos - lastX;
     float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
 
