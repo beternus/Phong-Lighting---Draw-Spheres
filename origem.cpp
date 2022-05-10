@@ -277,12 +277,18 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-int l, c, n, ks;
-
+xi=0;
+yi=0;
+//defini abaixo o 2 como xoffset
+yoffset= yi + 2 + l*
 for (l=0, l<4, l++){
     
     for (c=0, c<6, c++){
         glUniformMatrix4fv(viewLoc, 1, FALSE, glm::value_ptr(view)); //zerando a matrix model?
+        yoffset = yi + 2 + l*3;
+        xoffset = xi + 3 + c*1.5;
+        glDrawArrays(GL_POINTS, 0, xi + xoffset*L);
+        glDrawArrays(GL_POINTS, 0, yi + yoffset*L);
         glm::mat4 model = glm::mat4(1); //matriz identidade;
         glDrawArrays(GL_POINTS, 0, n);    
         //fazer uma logica aqui para que seja desenhado uma esfera do lado da outra e tambem abaixo - 3 esferas por 5 esferas = 15 esferas
